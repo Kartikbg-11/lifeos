@@ -1,0 +1,190 @@
+import { NextRequest, NextResponse } from 'next/server'
+import { db } from '@/lib/db'
+
+export async function POST(request: NextRequest) {
+  try {
+    const { projectId, documentId } = await request.json()
+
+    if (!projectId || !documentId) {
+      return NextResponse.json({ error: 'Project ID and Document ID are required' }, { status: 400 })
+    }
+
+    const scenarios = [
+      {
+        id: 'AI-TS-001',
+        projectId,
+        documentId,
+        scenarioId: 'TS-AUTH-001',
+        module: 'Authentication',
+        requirementId: 'REQ-A001',
+        description: 'Verify successful user registration with valid email, strong password, and all required fields populated correctly',
+        type: 'POSITIVE',
+        priority: 'HIGH',
+        status: 'DRAFT',
+        testPoints: ['Email format validation', 'Password strength check', 'Form submission', 'Confirmation email trigger', 'Database record creation'],
+      },
+      {
+        id: 'AI-TS-002',
+        projectId,
+        documentId,
+        scenarioId: 'TS-AUTH-002',
+        module: 'Authentication',
+        requirementId: 'REQ-A001',
+        description: 'Attempt registration with an email address that is already registered in the system',
+        type: 'NEGATIVE',
+        priority: 'HIGH',
+        status: 'DRAFT',
+        testPoints: ['Duplicate email detection', 'Error message display', 'No duplicate account created', 'Form data retention'],
+      },
+      {
+        id: 'AI-TS-003',
+        projectId,
+        documentId,
+        scenarioId: 'TS-AUTH-003',
+        module: 'Authentication',
+        requirementId: 'REQ-A002',
+        description: 'Verify password validation rejects passwords that do not meet complexity requirements (missing uppercase, lowercase, digit, or special character)',
+        type: 'BOUNDARY',
+        priority: 'HIGH',
+        status: 'DRAFT',
+        testPoints: ['Password too short (7 chars)', 'No uppercase letter', 'No lowercase letter', 'No digit', 'No special character', 'Exactly 8 chars with all requirements'],
+      },
+      {
+        id: 'AI-TS-004',
+        projectId,
+        documentId,
+        scenarioId: 'TS-AUTH-004',
+        module: 'Authentication',
+        requirementId: 'REQ-A003',
+        description: 'Verify account gets locked after 5 consecutive failed login attempts and appropriate messaging is shown',
+        type: 'NEGATIVE',
+        priority: 'HIGH',
+        status: 'DRAFT',
+        testPoints: ['4 failed attempts show remaining', '5th attempt locks account', 'Lockout message displayed', 'Lockout email sent', 'Correct password fails after lockout'],
+      },
+      {
+        id: 'AI-TS-005',
+        projectId,
+        documentId,
+        scenarioId: 'TS-SEARCH-001',
+        module: 'Product Catalog',
+        requirementId: 'REQ-A004',
+        description: 'Search for products using valid keywords and verify relevant results are returned with correct sorting and pagination',
+        type: 'POSITIVE',
+        priority: 'HIGH',
+        status: 'DRAFT',
+        testPoints: ['Search by exact product name', 'Search by partial keyword', 'Auto-suggestions display', 'Result relevance ranking', 'Pagination at 20 items/page'],
+      },
+      {
+        id: 'AI-TS-006',
+        projectId,
+        documentId,
+        scenarioId: 'TS-SEARCH-002',
+        module: 'Product Catalog',
+        requirementId: 'REQ-A005',
+        description: 'Apply price range filters at boundary values (minimum price, maximum price, exact boundary) and verify correct product filtering',
+        type: 'BOUNDARY',
+        priority: 'MEDIUM',
+        status: 'DRAFT',
+        testPoints: ['Filter at min price boundary', 'Filter at max price boundary', 'Filter including boundary values', 'Filter excluding boundary values', 'Empty result set for impossible range'],
+      },
+      {
+        id: 'AI-TS-007',
+        projectId,
+        documentId,
+        scenarioId: 'TS-CART-001',
+        module: 'Shopping Cart',
+        requirementId: 'REQ-A006',
+        description: 'Add multiple products to cart, update quantities, and verify real-time total calculation including subtotal, tax, and shipping estimates',
+        type: 'POSITIVE',
+        priority: 'HIGH',
+        status: 'DRAFT',
+        testPoints: ['Add single item', 'Add multiple items', 'Update quantity', 'Remove item', 'Subtotal calculation', 'Tax estimate', 'Cart badge count'],
+      },
+      {
+        id: 'AI-TS-008',
+        projectId,
+        documentId,
+        scenarioId: 'TS-CART-002',
+        module: 'Shopping Cart',
+        requirementId: 'REQ-A006',
+        description: 'Attempt to add more than 10 units of a single product and verify the quantity limit is enforced',
+        type: 'BOUNDARY',
+        priority: 'MEDIUM',
+        status: 'DRAFT',
+        testPoints: ['Quantity at limit (10)', 'Exceed limit (11) - error', 'Quantity selector max value', 'API validation for over-limit'],
+      },
+      {
+        id: 'AI-TS-009',
+        projectId,
+        documentId,
+        scenarioId: 'TS-PAY-001',
+        module: 'Checkout & Payment',
+        requirementId: 'REQ-A008',
+        description: 'Complete a purchase using a valid credit card and verify order confirmation, email notification, and database order creation',
+        type: 'POSITIVE',
+        priority: 'HIGH',
+        status: 'DRAFT',
+        testPoints: ['Enter valid card details', 'Payment processing', 'Order confirmation page', 'Email sent', 'Order in database', 'Inventory updated'],
+      },
+      {
+        id: 'AI-TS-010',
+        projectId,
+        documentId,
+        scenarioId: 'TS-PAY-002',
+        module: 'Checkout & Payment',
+        requirementId: 'REQ-A008',
+        description: 'Attempt payment with an expired credit card and verify proper error handling and retry option',
+        type: 'NEGATIVE',
+        priority: 'HIGH',
+        status: 'DRAFT',
+        testPoints: ['Expired card detection', 'Error message display', 'No order created', 'Retry button available', 'Cart preserved'],
+      },
+      {
+        id: 'AI-TS-011',
+        projectId,
+        documentId,
+        scenarioId: 'TS-SEC-001',
+        module: 'Security',
+        requirementId: 'REQ-A003',
+        description: 'Attempt SQL injection and XSS attacks on login form, search bar, and payment fields to verify input sanitization',
+        type: 'SECURITY',
+        priority: 'HIGH',
+        status: 'DRAFT',
+        testPoints: ['SQL injection in login', 'XSS in search bar', 'XSS in payment fields', 'CSRF token validation', 'Input sanitization verification'],
+      },
+      {
+        id: 'AI-TS-012',
+        projectId,
+        documentId,
+        scenarioId: 'TS-COUPON-001',
+        module: 'Shopping Cart',
+        requirementId: 'REQ-A007',
+        description: 'Apply expired, invalid, and valid coupon codes and verify correct validation behavior, discount application, and error messages',
+        type: 'NEGATIVE',
+        priority: 'MEDIUM',
+        status: 'DRAFT',
+        testPoints: ['Expired coupon rejected', 'Invalid code rejected', 'Valid coupon accepted', 'Discount reflected in total', 'Min order value check', 'Single-use coupon prevention'],
+      },
+    ]
+
+    // Save scenarios to DB
+    await db.testScenario.createMany({
+      data: scenarios.map((s) => ({
+        projectId,
+        documentId,
+        scenarioId: s.scenarioId,
+        module: s.module,
+        description: s.description,
+        type: s.type,
+        priority: s.priority,
+        status: s.status,
+      })),
+    })
+
+    return NextResponse.json({ scenarios, totalGenerated: scenarios.length })
+  } catch (error) {
+    console.error('AI scenarios error:', error)
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+  }
+}

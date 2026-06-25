@@ -1,0 +1,202 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id              String         @id @default(cuid())
+  username        String         @unique
+  email           String         @unique
+  password        String
+  firstName       String         @default("")
+  lastName        String         @default("")
+  role            String         @default("QA_ENGINEER")
+  isActive        Boolean        @default(true)
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+  createdProjects Project[]      @relation("ProjectCreator")
+  projects        ProjectMember[]
+  testCases       TestCase[]
+  reportedDefects Defect[]       @relation("DefectReporter")
+  assignedDefects Defect[]       @relation("DefectAssignee")
+  auditLogs       AuditLog[]
+}
+
+model Project {
+  id              String           @id @default(cuid())
+  name            String
+  description     String           @default("")
+  status          String           @default("ACTIVE")
+  createdById     String
+  createdBy       User             @relation("ProjectCreator", fields: [createdById], references: [id])
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  members         ProjectMember[]
+  documents       Document[]
+  testScenarios   TestScenario[]
+  testCases       TestCase[]
+  rtms            RTM[]
+  bugPredictions  BugPrediction[]
+  defects         Defect[]
+}
+
+model ProjectMember {
+  id            String   @id @default(cuid())
+  projectId     String
+  project       Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  userId        String
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  roleInProject String   @default("QA_ENGINEER")
+  joinedAt      DateTime @default(now())
+  @@unique([projectId, userId])
+}
+
+model Document {
+  id               String        @id @default(cuid())
+  projectId        String
+  project          Project       @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  name             String
+  fileType         String
+  filePath         String        @default("")
+  fileSize         Int           @default(0)
+  uploadedById     String
+  status           String        @default("UPLOADED")
+  version          Int           @default(1)
+  contentExtracted String        @default("")
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+  requirements     Requirement[]
+}
+
+model Requirement {
+  id          String   @id @default(cuid())
+  documentId  String
+  document    Document @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  projectId   String
+  reqId       String   @default("")
+  title       String
+  type        String   @default("FUNCTIONAL")
+  description String   @default("")
+  priority    String   @default("MEDIUM")
+  source      String   @default("DOCUMENT")
+  createdAt   DateTime @default(now())
+}
+
+model TestScenario {
+  id            String   @id @default(cuid())
+  projectId     String
+  project       Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  documentId    String   @default("")
+  requirementId String   @default("")
+  scenarioId    String   @default("")
+  module        String   @default("")
+  description   String
+  type          String   @default("POSITIVE")
+  priority      String   @default("MEDIUM")
+  status        String   @default("DRAFT")
+  createdAt     DateTime @default(now())
+}
+
+model TestCase {
+  id                  String   @id @default(cuid())
+  projectId           String
+  project             Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  documentId          String   @default("")
+  scenarioId          String   @default("")
+  requirementId       String   @default("")
+  tcId                String   @default("")
+  module              String   @default("")
+  title               String
+  preconditions       String   @default("")
+  testData            String   @default("")
+  steps               String   @default("")
+  expectedResult      String
+  actualResult        String   @default("")
+  priority            String   @default("MEDIUM")
+  severity            String   @default("MODERATE")
+  type                String   @default("POSITIVE")
+  automationCandidate String   @default("MANUAL_ONLY")
+  automationReason    String   @default("")
+  status              String   @default("DRAFT")
+  createdById         String?
+  createdBy           User?    @relation(fields: [createdById], references: [id], onDelete: SetNull)
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+}
+
+model RTM {
+  id               String   @id @default(cuid())
+  projectId        String
+  project          Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  requirementId    String   @default("")
+  requirementTitle String   @default("")
+  scenarioId       String   @default("")
+  testCaseId       String   @default("")
+  coverageStatus   String   @default("NOT_COVERED")
+  gapAnalysis      String   @default("")
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+}
+
+model BugPrediction {
+  id              String   @id @default(cuid())
+  projectId       String
+  project         Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  documentId      String   @default("")
+  riskArea        String
+  possibleDefects String   @default("")
+  likelihood      String   @default("MEDIUM")
+  impact          String   @default("MEDIUM")
+  suggestedTests  String   @default("")
+  status          String   @default("OPEN")
+  createdAt       DateTime @default(now())
+}
+
+model AuditLog {
+  id         String   @id @default(cuid())
+  userId     String?
+  user       User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  action     String
+  entityType String   @default("")
+  entityId   String   @default("")
+  details    String   @default("")
+  createdAt  DateTime @default(now())
+}
+
+model AppSetting {
+  id          String   @id @default(cuid())
+  key         String   @unique
+  value       String
+  description String   @default("")
+  updatedAt   DateTime @updatedAt
+}
+
+model Defect {
+  id                String   @id @default(cuid())
+  defectId          String   @default("")
+  title             String
+  description       String   @default("")
+  severity          String   @default("MEDIUM")
+  priority          String   @default("MEDIUM")
+  status            String   @default("OPEN")
+  projectId         String
+  project           Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  testCaseId        String   @default("")
+  stepsToReproduce  String   @default("")
+  expectedBehavior  String   @default("")
+  actualBehavior    String   @default("")
+  environment       String   @default("")
+  module            String   @default("")
+  reportedById      String
+  reportedBy        User     @relation("DefectReporter", fields: [reportedById], references: [id])
+  assignedToId      String?
+  assignedTo        User?    @relation("DefectAssignee", fields: [assignedToId], references: [id], onDelete: SetNull)
+  resolution        String   @default("")
+  resolvedAt        DateTime?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+}
