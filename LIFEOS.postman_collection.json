@@ -1,0 +1,149 @@
+{
+  "info": {
+    "_postman_id": "c295cc2d-e1b6-41a5-a16c-72b01530a376",
+    "name": "LIFEOS API",
+    "description": "LIFEOS API collection. Run Register or Login first; Postman retains the HTTP-only session cookie automatically.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:8090/api", "type": "string" },
+    { "key": "resourceId", "value": "replace-with-resource-id", "type": "string" },
+    { "key": "habitId", "value": "replace-with-habit-id", "type": "string" },
+    { "key": "date", "value": "2026-09-01", "type": "string" },
+    { "key": "month", "value": "2026-09", "type": "string" }
+  ],
+  "item": [
+    {
+      "name": "Health",
+      "item": [
+        { "name": "API health", "request": { "method": "GET", "header": [], "url": "{{baseUrl}}" } }
+      ]
+    },
+    {
+      "name": "Authentication",
+      "item": [
+        { "name": "Register", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"name\": \"Demo User\",\n  \"email\": \"demo@example.com\",\n  \"password\": \"secret123\"\n}", "options": { "raw": { "language": "json" } } }, "url": "{{baseUrl}}/auth/register" } },
+        { "name": "Login", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"email\": \"demo@example.com\",\n  \"password\": \"secret123\"\n}", "options": { "raw": { "language": "json" } } }, "url": "{{baseUrl}}/auth/login" } },
+        { "name": "Current user", "request": { "method": "GET", "header": [], "url": "{{baseUrl}}/auth/me" } },
+        { "name": "Logout", "request": { "method": "POST", "header": [], "url": "{{baseUrl}}/auth/logout" } }
+      ]
+    },
+    {
+      "name": "Dashboard",
+      "item": [
+        { "name": "Today", "request": { "method": "GET", "header": [], "url": "{{baseUrl}}/dashboard/today" } },
+        { "name": "Daily score", "request": { "method": "GET", "header": [], "url": "{{baseUrl}}/dashboard/score?date={{date}}" } },
+        { "name": "Weekly", "request": { "method": "GET", "header": [], "url": "{{baseUrl}}/dashboard/weekly" } },
+        { "name": "Monthly", "request": { "method": "GET", "header": [], "url": "{{baseUrl}}/dashboard/monthly?month={{month}}" } }
+      ]
+    },
+    {
+      "name": "Fitness",
+      "item": [
+        { "name": "List fitness", "request": { "method": "GET", "header": [], "url": "{{baseUrl}}/fitness?startDate={{date}}&endDate={{date}}&limit=50" } },
+        { "name": "Create fitness", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"date\": \"{{date}}\",\n  \"workoutType\": \"strength\",\n  \"workoutDuration\": 60,\n  \"pushups\": 40,\n  \"squats\": 40,\n  \"completed\": true,\n  \"notes\": \"Morning session\"\n}", "options": { "raw": { "language": "json" } } }, "url": "{{baseUrl}}/fitness" } },
+        { "name": "Update fitness", "request": { "method": "PUT", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"workoutDuration\": 75,\n  \"completed\": true\n}", "options": { "raw": { "language": "json" } } }, "url": "{{baseUrl}}/fitness/{{resourceId}}" } },
+        { "name": "Delete fitness", "request": { "method": "DELETE", "header": [], "url": "{{baseUrl}}/fitness/{{resourceId}}" } }
+      ]
+    },
+    {
+      "name": "Learning",
+      "item": [
+        { "name": "List learning", "request": { "method": "GET", "header": [], "url": "{{baseUrl}}/learning?startDate={{date}}&endDate={{date}}&category=api-testing&limit=50" } },
+        { "name": "Create learning", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"date\": \"{{date}}\",\n  \"topic\": \"REST API testing\",\n  \"category\": \"api-testing\",\n  \"duration\": 90,\n  \"whatLearned\": \"Postman collections\",\n  \"completed\": true\n}", "options": { "raw": { "language": "json" } } }, "url": "{{baseUrl}}/learning" } },
+        { "name": "Update learning", "request": { "method": "PUT", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"duration\": 120,\n  \"completed\": true\n}", "options": { "raw": { "language": "json" } } }, "url": "{{baseUrl}}/learning/{{resourceId}}" } },
+        { "name": "Delete learning", "request": { "method": "DELETE", "header": [], "url": "{{baseUrl}}/learning/{{resourceId}}" } }
+      ]
+    },
+    {
+      "name": "Interview",
+      "item": [
+        { "name": "List interview sessions", "request": { "method": "GET", "header": [], "url": "{{baseUrl}}/interview?startDate={{date}}&endDate={{date}}&category=api-testing&limit=50" } },
+        { "name": "Create interview session", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"date\": \"{{date}}\",\n  \"topic\": \"API testing interview\",\n  \"category\": \"api-testing\",\n  \"duration\": 60,\n  \"questionsPracticed\": 20,\n  \"correctAnswers\": 16,\n  \"mockInterview\": true,\n  \"confidenceLevel\": 4,\n  \"difficulty\": \"medium\"\n}", "options": { "raw": { "language": "json" } } }, "url": "{{baseUrl}}/interview" } },
+        { "name": "Update interview session", "request": { "method": "PUT", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"duration\": 75,\n  \"confidenceLevel\": 5\n}", "options": { "raw": { "language": "json" } } }, "url": "{{baseUrl}}/interview/{{resourceId}}" } },
+        { "name": "Delete interview session", "request": { "method": "DELETE", "header": [], "url": "{{baseUrl}}/interview/{{resourceId}}" } }
+      ]
+    },
+    {
+      "name": "Sleep",
+      "item": [
+        { "name": "List sleep", "request": { "method": "GET", "header": [], "url": "{{baseUrl}}/sleep?startDate={{date}}&endDate={{date}}&limit=50" } },
+        { "name": "Create sleep", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"date\": \"{{date}}\",\n  \"sleepStart\": \"2026-09-01T23:00:00.000Z\",\n  \"sleepEnd\": \"2026-09-02T07:00:00.000Z\",\n  \"quality\": \"good\",\n  \"notes\": \"Slept well\"\n}", "options": { "raw": { "language": "json" } } }, "url": "{{baseUrl}}/sleep" } },
+        { "name": "Update sleep", "request": { "method": "PUT", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"quality\": \"excellent\"\n}", "options": { "raw": { "language": "json" } } }, "url": "{{baseUrl}}/sleep/{{resourceId}}" } },
+        { "name": "Delete sleep", "request": { "method": "DELETE", "header": [], "url": "{{baseUrl}}/sleep/{{resourceId}}" } }
+      ]
+    },
+    {
+      "name": "Food",
+      "item": [
+        { "name": "List food", "request": { "method": "GET", "header": [], "url": "{{baseUrl}}/food?startDate={{date}}&endDate={{date}}&mealType=breakfast&limit=50" } },
+        { "name": "Create food", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"date\": \"{{date}}\",\n  \"mealType\": \"breakfast\",\n  \"foodName\": \"Oats and eggs\",\n  \"quantity\": \"1 bowl\",\n  \"calories\": 450,\n  \"protein\": 30,\n  \"carbohydrates\": 50,\n  \"fat\": 14\n}", "options": { "raw": { "language": "json" } } }, "url": "{{baseUrl}}/food" } },
+        { "name": "Update food", "request": { "method": "PUT", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"quantity\": \"2 bowls\",\n  \"calories\": 600\n}", "options": { "raw": { "language": "json" } } }, "url": "{{baseUrl}}/food/{{resourceId}}" } },
+        { "name": "Delete food", "request": { "method": "DELETE", "header": [], "url": "{{baseUrl}}/food/{{resourceId}}" } }
+      ]
+    },
+    {
+      "name": "Water",
+      "item": [
+        { "name": "List water", "request": { "method": "GET", "header": [], "url": "{{baseUrl}}/water?startDate={{date}}&endDate={{date}}" } },
+        { "name": "Create water", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"date\": \"{{date}}\",\n  \"amount\": 500,\n  \"notes\": \"Morning water\"\n}", "options": { "raw": { "language": "json" } } }, "url": "{{baseUrl}}/water" } },
+        { "name": "Delete water", "request": { "method": "DELETE", "header": [], "url": "{{baseUrl}}/water/{{resourceId}}" } }
+      ]
+    },
+    {
+      "name": "Expenses",
+      "item": [
+        { "name": "List expenses", "request": { "method": "GET", "header": [], "url": "{{baseUrl}}/expenses?startDate={{date}}&endDate={{date}}&category=food&paymentMethod=upi&limit=50" } },
+        { "name": "Create expense", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"date\": \"{{date}}\",\n  \"amount\": 250,\n  \"category\": \"food\",\n  \"reason\": \"Lunch\",\n  \"paymentMethod\": \"upi\",\n  \"notes\": \"Team lunch\"\n}", "options": { "raw": { "language": "json" } } }, "url": "{{baseUrl}}/expenses" } },
+        { "name": "Update expense", "request": { "method": "PUT", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"amount\": 275,\n  \"reason\": \"Lunch and tea\"\n}", "options": { "raw": { "language": "json" } } }, "url": "{{baseUrl}}/expenses/{{resourceId}}" } },
+        { "name": "Delete expense", "request": { "method": "DELETE", "header": [], "url": "{{baseUrl}}/expenses/{{resourceId}}" } },
+        { "name": "All expense summaries", "request": { "method": "GET", "header": [], "url": "{{baseUrl}}/expenses/summary?date={{date}}&month={{month}}" } },
+        { "name": "Monthly expense summary", "request": { "method": "GET", "header": [], "url": "{{baseUrl}}/expenses/summary?type=monthly&month={{month}}" } }
+      ]
+    },
+    {
+      "name": "Habits",
+      "item": [
+        { "name": "List habits", "request": { "method": "GET", "header": [], "url": "{{baseUrl}}/habits?includeInactive=false&date={{date}}" } },
+        { "name": "Create habit", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"name\": \"Read 20 pages\",\n  \"description\": \"Daily reading\",\n  \"icon\": \"book\",\n  \"color\": \"#6366f1\",\n  \"isActive\": true\n}", "options": { "raw": { "language": "json" } } }, "url": "{{baseUrl}}/habits" } },
+        { "name": "Update habit", "request": { "method": "PUT", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"name\": \"Read 30 pages\",\n  \"isActive\": true\n}", "options": { "raw": { "language": "json" } } }, "url": "{{baseUrl}}/habits/{{habitId}}" } },
+        { "name": "Delete habit", "request": { "method": "DELETE", "header": [], "url": "{{baseUrl}}/habits/{{habitId}}" } },
+        { "name": "Set habit completion", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"habitId\": \"{{habitId}}\",\n  \"date\": \"{{date}}\",\n  \"completed\": true\n}", "options": { "raw": { "language": "json" } } }, "url": "{{baseUrl}}/habits/complete" } },
+        { "name": "List habit completions", "request": { "method": "GET", "header": [], "url": "{{baseUrl}}/habits/complete?startDate={{date}}&endDate={{date}}&habitId={{habitId}}" } }
+      ]
+    },
+    {
+      "name": "Goals",
+      "item": [
+        { "name": "List goals", "request": { "method": "GET", "header": [], "url": "{{baseUrl}}/goals?type=daily&category=fitness&includeCompleted=true&activeOnly=false" } },
+        { "name": "Create goal", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"title\": \"Exercise every day\",\n  \"description\": \"Complete a daily workout\",\n  \"type\": \"daily\",\n  \"category\": \"fitness\",\n  \"targetValue\": 60,\n  \"unit\": \"minutes\",\n  \"startDate\": \"{{date}}\"\n}", "options": { "raw": { "language": "json" } } }, "url": "{{baseUrl}}/goals" } },
+        { "name": "Update goal", "request": { "method": "PUT", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"targetValue\": 75,\n  \"isCompleted\": true\n}", "options": { "raw": { "language": "json" } } }, "url": "{{baseUrl}}/goals/{{resourceId}}" } },
+        { "name": "Delete goal", "request": { "method": "DELETE", "header": [], "url": "{{baseUrl}}/goals/{{resourceId}}" } }
+      ]
+    },
+    {
+      "name": "Journal",
+      "item": [
+        { "name": "List journal entries", "request": { "method": "GET", "header": [], "url": "{{baseUrl}}/journal?startDate={{date}}&endDate={{date}}&limit=50" } },
+        { "name": "Upsert journal entry", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"date\": \"{{date}}\",\n  \"accomplishments\": \"Completed planned tasks\",\n  \"whatLearned\": \"API collection workflows\",\n  \"wentWell\": \"Stayed focused\",\n  \"improvementTomorrow\": \"Start earlier\",\n  \"generalNotes\": \"Good day\"\n}", "options": { "raw": { "language": "json" } } }, "url": "{{baseUrl}}/journal" } },
+        { "name": "Get journal by date", "request": { "method": "GET", "header": [], "url": "{{baseUrl}}/journal/{{date}}" } },
+        { "name": "Update journal by date", "request": { "method": "PUT", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"generalNotes\": \"Updated journal notes\"\n}", "options": { "raw": { "language": "json" } } }, "url": "{{baseUrl}}/journal/{{date}}" } },
+        { "name": "Delete journal by date", "request": { "method": "DELETE", "header": [], "url": "{{baseUrl}}/journal/{{date}}" } }
+      ]
+    },
+    {
+      "name": "Settings",
+      "item": [
+        { "name": "Get settings", "request": { "method": "GET", "header": [], "url": "{{baseUrl}}/settings" } },
+        { "name": "Update settings", "request": { "method": "PUT", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"name\": \"Demo User\",\n  \"workoutGoal\": 60,\n  \"learningGoal\": 180,\n  \"waterGoal\": 3000,\n  \"proteinGoal\": 100,\n  \"currency\": \"INR\",\n  \"timezone\": \"Asia/Kolkata\"\n}", "options": { "raw": { "language": "json" } } }, "url": "{{baseUrl}}/settings" } }
+      ]
+    },
+    {
+      "name": "Export",
+      "item": [
+        { "name": "Export all JSON", "request": { "method": "GET", "header": [], "url": "{{baseUrl}}/export?format=json" } },
+        { "name": "Export selected modules", "request": { "method": "GET", "header": [], "url": "{{baseUrl}}/export?format=json&include=fitness,learning,goals,journal" } }
+      ]
+    }
+  ]
+}
