@@ -6,11 +6,12 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     const { email, password } = body;
+    const normalizedEmail = typeof email === 'string' ? email.trim().toLowerCase() : email;
 
     // Validate required fields
     const errors: string[] = [];
     
-    const emailError = validateRequired(email, 'Email');
+    const emailError = validateRequired(normalizedEmail, 'Email');
     if (emailError) errors.push(emailError);
     
     const passwordError = validateRequired(password, 'Password');
@@ -25,7 +26,7 @@ export async function POST(request: NextRequest) {
 
     // Find user by email
     const user = await db.user.findUnique({
-      where: { email: email.toLowerCase() },
+      where: { email: normalizedEmail },
     });
 
     if (!user || !user.passwordHash) {

@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "predev": "prisma generate && prisma db push",
-    "dev": "next dev -p 8000",
+    "dev": "next dev -p 8090",
     "postinstall": "prisma generate",
     "build": "next build && cp -r .next/static .next/standalone/.next/ && cp -r public .next/standalone/",
     "start": "NODE_ENV=production bun .next/standalone/server.js 2>&1 | tee server.log",

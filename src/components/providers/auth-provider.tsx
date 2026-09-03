@@ -56,6 +56,12 @@ export function AuthProvider({ children }: AuthProviderProps) {
     checkAuth();
   }, [checkAuth]);
 
+  useEffect(() => {
+    if (authChecked && !isLoading && !isAuthPage && !user) {
+      router.replace('/login');
+    }
+  }, [authChecked, isLoading, isAuthPage, user, router]);
+
   // Show loading state while checking auth
   if (isLoading || !authChecked) {
     return (
@@ -82,11 +88,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   // If not authenticated and not on auth page, show login
   if (!user) {
-    // Redirect to login
-    if (typeof window !== 'undefined') {
-      router.push('/login');
-    }
-    
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="flex flex-col items-center gap-4">

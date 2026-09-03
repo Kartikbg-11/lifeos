@@ -2,7 +2,6 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -13,7 +12,6 @@ import { Zap, Mail, Lock, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 
 export default function LoginPage() {
-  const router = useRouter();
   const { login } = useAuthStore();
   
   const [email, setEmail] = useState('');
@@ -48,18 +46,16 @@ export default function LoginPage() {
     setIsLoading(true);
     
     try {
-      const data = await api.auth.login(email, password);
+      const data = await api.auth.login(email.trim().toLowerCase(), password);
       
       // Ensure we have user data before logging in
       if (data && data.id) {
         login(data);
         toast.success('Welcome back! 🎉');
         
-        // Small delay to ensure state is set before navigation
-        setTimeout(() => {
-          router.push('/');
-          router.refresh();
-        }, 100);
+        // Reload through the server so the freshly issued auth cookie is
+        // applied before protected content checks the session.
+        window.location.replace('/');
       } else {
         throw new Error('Invalid response from server');
       }
