@@ -55,7 +55,7 @@ export default function LoginPage() {
         
         // Reload through the server so the freshly issued auth cookie is
         // applied before protected content checks the session.
-        window.location.replace('/');
+        window.location.replace(data.roleId ? '/admin' : '/');
       } else {
         throw new Error('Invalid response from server');
       }

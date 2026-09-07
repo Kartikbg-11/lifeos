@@ -7,6 +7,7 @@ export interface User {
   id: string;
   email: string;
   name: string | null;
+  roleId?: string | null;
   settings?: {
     workoutGoal: number;
     pushupGoal: number;

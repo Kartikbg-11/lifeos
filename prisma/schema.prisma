@@ -17,6 +17,18 @@ model User {
   email        String   @unique
   name         String?
   passwordHash String?
+  status       String   @default("active")
+  roleId       String?
+  lastActiveAt DateTime?
+  role         AdminRole? @relation(fields: [roleId], references: [id])
+  sessions     AuthSession[]
+  auditEvents  AuditEvent[]
+  activityEvents ActivityEvent[]
+  subscriptions Subscription[]
+  payments     Payment[]
+  feedback     Feedback[]
+  supportTickets SupportTicket[]
+  notificationReceipts NotificationReceipt[]
   
   // Settings
   workoutGoal        Int      @default(60)       // minutes per day
@@ -46,6 +58,26 @@ model User {
   goals            Goal[]
   journalEntries   JournalEntry[]
   reminders        Reminder[]
+  improvements     Improvement[]
+
+  @@index([status, createdAt])
+  @@index([lastActiveAt])
+}
+
+model Improvement {
+  id        String   @id @default(cuid())
+  userId    String
+  title     String
+  content   String   @default("")
+  category  String   @default("Mindset")
+  kind      String   @default("note")
+  completed Boolean  @default(false)
+  pinned    Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, createdAt])
 }
 
 // ==================== DAILY ENTRY ====================
@@ -310,4 +342,215 @@ model Reminder {
   updatedAt DateTime @updatedAt
   
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+// ==================== ADMINISTRATION ====================
+
+model AdminRole {
+  id          String @id
+  name        String @unique
+  permissions String @default("[]") // Validated permission keys; Super Admin is immutable.
+  users       User[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model AuthSession {
+  id        String @id // SHA-256 of a random 256-bit browser token.
+  userId    String
+  user      User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  @@index([userId])
+  @@index([expiresAt])
+}
+
+model AuthAttempt {
+  id          String @id // Hashed normalized email; no password or raw identifier.
+  count       Int @default(0)
+  windowStart DateTime @default(now())
+}
+
+model AuditEvent {
+  id         String @id @default(cuid())
+  actorId    String?
+  actor      User? @relation(fields: [actorId], references: [id], onDelete: SetNull)
+  actorName  String
+  action     String
+  entity     String
+  targetId   String?
+  detail     String @default("")
+  result     String @default("success")
+  createdAt  DateTime @default(now())
+  @@index([createdAt])
+  @@index([entity, action])
+}
+
+model ActivityEvent {
+  id        String @id @default(cuid())
+  userId    String?
+  user      User? @relation(fields: [userId], references: [id], onDelete: SetNull)
+  action    String
+  feature   String
+  detail    String @default("")
+  createdAt DateTime @default(now())
+  @@index([userId, createdAt])
+  @@index([createdAt])
+}
+
+model Plan {
+  id           String @id @default(cuid())
+  name         String
+  priceCents   Int @default(0)
+  currency     String @default("INR")
+  cycle        String @default("monthly")
+  features     String @default("")
+  limits       String @default("")
+  trialDays    Int @default(0)
+  enabled      Boolean @default(true)
+  subscriptions Subscription[]
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Subscription {
+  id        String @id @default(cuid())
+  userId    String
+  user      User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  planId    String
+  plan      Plan @relation(fields: [planId], references: [id])
+  status    String @default("trial")
+  startAt   DateTime @default(now())
+  endAt     DateTime
+  payments  Payment[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  @@index([userId, status])
+  @@index([status, endAt])
+}
+
+model Payment {
+  id             String @id @default(cuid())
+  reference      String @unique
+  userId         String
+  user           User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  subscriptionId String?
+  subscription   Subscription? @relation(fields: [subscriptionId], references: [id], onDelete: SetNull)
+  amountCents    Int
+  currency       String @default("INR")
+  method         String @default("manual")
+  status         String @default("pending")
+  note           String @default("")
+  paidAt         DateTime @default(now())
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  @@index([status, paidAt])
+  @@index([userId])
+}
+
+model ContentPost {
+  id        String @id @default(cuid())
+  title     String
+  body      String
+  category  String @default("guide")
+  status    String @default("draft")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  @@index([status, createdAt])
+}
+
+model Feedback {
+  id         String @id @default(cuid())
+  userId     String
+  user       User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title      String
+  message    String
+  kind       String @default("suggestion")
+  rating     Int?
+  status     String @default("open")
+  priority   String @default("normal")
+  assignee   String @default("")
+  resolution String @default("")
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  @@index([status, createdAt])
+}
+
+model SupportTicket {
+  id         String @id @default(cuid())
+  userId     String
+  user       User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title      String
+  message    String
+  status     String @default("open")
+  priority   String @default("normal")
+  assignee   String @default("")
+  resolution String @default("")
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  @@index([status, createdAt])
+}
+
+model Notification {
+  id          String @id @default(cuid())
+  title       String
+  message     String
+  audience    String @default("all") // all, role, user
+  target      String @default("")
+  status      String @default("draft")
+  scheduledAt DateTime?
+  sentAt      DateTime?
+  receipts    NotificationReceipt[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  @@index([status, scheduledAt])
+}
+
+model NotificationReceipt {
+  id             String @id @default(cuid())
+  notificationId String
+  notification   Notification @relation(fields: [notificationId], references: [id], onDelete: Cascade)
+  userId         String
+  user           User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  readAt         DateTime?
+  createdAt      DateTime @default(now())
+  @@unique([notificationId, userId])
+  @@index([userId, readAt])
+}
+
+model AdminReport {
+  id        String @id @default(cuid())
+  name      String
+  type      String
+  startAt   DateTime
+  endAt     DateTime
+  status    String @default("ready")
+  snapshot  String // Immutable generated rows, not live user data.
+  createdAt DateTime @default(now())
+  @@index([createdAt])
+}
+
+model ReportSchedule {
+  id        String @id @default(cuid())
+  name      String
+  type      String
+  frequency String @default("weekly")
+  enabled   Boolean @default(true)
+  nextRunAt DateTime
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  @@index([enabled, nextRunAt])
+}
+
+model AdminSettings {
+  id                  String @id @default("app")
+  appName             String @default("LIFEOS")
+  logoUrl             String @default("")
+  timezone            String @default("Asia/Kolkata")
+  dateFormat          String @default("dd MMM yyyy")
+  registrationEnabled Boolean @default(true)
+  passwordMinLength   Int @default(8)
+  sessionHours        Int @default(720)
+  inAppEnabled        Boolean @default(true)
+  updatedAt           DateTime @updatedAt
 }

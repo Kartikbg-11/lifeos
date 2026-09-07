@@ -2,10 +2,11 @@ import { NextRequest } from 'next/server';
 import { db } from '@/lib/db';
 import bcrypt from 'bcryptjs';
 import { cookies } from 'next/headers';
+import { createHash } from 'node:crypto';
 
 // ==================== CONSTANTS ====================
 
-const COOKIE_NAME = 'lifeos-user-id';
+const COOKIE_NAME = 'lifeos-session';
 const COOKIE_MAX_AGE = 60 * 60 * 24 * 30; // 30 days
 
 // ==================== PASSWORD UTILITIES ====================
@@ -29,36 +30,40 @@ export function generateToken(): string {
 // ==================== COOKIE HELPERS ====================
 
 export async function setAuthCookie(userId: string): Promise<void> {
+  const settings = await db.adminSettings.findUnique({ where: { id: 'app' } });
+  const maxAge = settings ? settings.sessionHours * 3600 : COOKIE_MAX_AGE;
+  const token = generateToken();
+  await db.authSession.create({ data: { id: createHash('sha256').update(token).digest('hex'), userId, expiresAt: new Date(Date.now() + maxAge * 1000) } });
   const cookieStore = await cookies();
-  cookieStore.set(COOKIE_NAME, userId, {
+  cookieStore.delete('lifeos-user-id');
+  cookieStore.set(COOKIE_NAME, token, {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'lax',
-    maxAge: COOKIE_MAX_AGE,
+    maxAge,
     path: '/',
   });
 }
 
 export async function getAuthUserId(): Promise<string | null> {
   const cookieStore = await cookies();
-  const userId = cookieStore.get(COOKIE_NAME)?.value;
-  
-  if (!userId) {
-    return null;
+  const token = cookieStore.get(COOKIE_NAME)?.value;
+  if (!token || !/^[a-f0-9]{64}$/.test(token)) return null;
+  const session = await db.authSession.findUnique({ where: { id: createHash('sha256').update(token).digest('hex') }, include: { user: { select: { id: true, status: true, lastActiveAt: true } } } });
+  if (!session || session.expiresAt <= new Date() || session.user.status !== 'active') return null;
+  // Throttle presence writes; this records authenticated usage, not session duration.
+  if (!session.user.lastActiveAt || Date.now() - +session.user.lastActiveAt > 300000) {
+    await db.user.update({ where: { id: session.userId }, data: { lastActiveAt: new Date() } });
   }
-  
-  // Verify user exists in database
-  const user = await db.user.findUnique({
-    where: { id: userId },
-    select: { id: true },
-  });
-  
-  return user?.id ?? null;
+  return session.userId;
 }
 
 export async function removeAuthCookie(): Promise<void> {
   const cookieStore = await cookies();
+  const token = cookieStore.get(COOKIE_NAME)?.value;
+  if (token) await db.authSession.deleteMany({ where: { id: createHash('sha256').update(token).digest('hex') } });
   cookieStore.delete(COOKIE_NAME);
+  cookieStore.delete('lifeos-user-id');
 }
 
 // ==================== AUTH MIDDLEWARE ====================

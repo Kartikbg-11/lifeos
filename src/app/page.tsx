@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { ScoreRing } from '@/components/shared/progress-ring';
+import { LifeOSGrowthGraphic } from '@/components/shared/lifeos-growth-graphic';
 import { MetricCard } from '@/components/shared/stat-card';
 import { DashboardSkeleton } from '@/components/shared/loading-skeleton';
 import { EmptyState } from '@/components/shared/empty-state';
@@ -268,6 +269,11 @@ export default function DashboardPage() {
 
   return (
     <div className="space-y-6 max-w-7xl mx-auto">
+      <LifeOSGrowthGraphic progress={dailyScore} />
+      <Link href="/improvement" className="flex flex-wrap items-center justify-between gap-4 rounded-2xl bg-[#123e35] p-5 text-white transition-colors hover:bg-[#194e43]">
+        <div><p className="text-xs font-medium uppercase tracking-widest text-emerald-200">New · Improvement Studio</p><h2 className="mt-1 text-lg font-semibold">Turn today’s reflections into tomorrow’s small wins.</h2><p className="mt-1 text-sm text-emerald-100/80">Your notes, fresh ideas, and next steps — together.</p></div>
+        <span className="rounded-full bg-white/10 px-4 py-2 text-sm font-medium">Explore your space →</span>
+      </Link>
       {/* Daily Score Section */}
       <Card className="rounded-2xl border-0 shadow-sm bg-gradient-to-br from-emerald-50 to-white overflow-hidden">
         <CardContent className="p-6 md:p-8">

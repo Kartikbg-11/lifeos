@@ -1,11 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { hashPassword, setAuthCookie, validateRequired } from '@/lib/auth';
+import { verifyOrigin } from '@/lib/admin/server';
 
 export async function POST(request: NextRequest) {
   try {
+    verifyOrigin(request);
+    const settings = await db.adminSettings.findUnique({ where: { id: 'app' } });
+    if (settings && !settings.registrationEnabled) return NextResponse.json({ success: false, error: 'Registration is currently closed.' }, { status: 403 });
     const body = await request.json();
     const { email, name, password } = body;
+    if (typeof email !== 'string' || email.length > 254 || typeof password !== 'string' || password.length > 256 || (name !== undefined && (typeof name !== 'string' || name.length > 100))) return NextResponse.json({ success: false, error: 'Enter valid account details.' }, { status: 400 });
 
     // Validate required fields
     const errors: string[] = [];
@@ -22,8 +27,8 @@ export async function POST(request: NextRequest) {
     }
 
     // Validate password length
-    if (password && password.length < 6) {
-      errors.push('Password must be at least 6 characters');
+    if (password && password.length < (settings?.passwordMinLength || 8)) {
+      errors.push(`Password must be at least ${settings?.passwordMinLength || 8} characters`);
     }
 
     if (errors.length > 0) {
@@ -35,7 +40,7 @@ export async function POST(request: NextRequest) {
 
     // Check if user already exists
     const existingUser = await db.user.findUnique({
-      where: { email: email.toLowerCase() },
+      where: { email: email.trim().toLowerCase() },
     });
 
     if (existingUser) {
@@ -51,13 +56,15 @@ export async function POST(request: NextRequest) {
     // Create user
     const user = await db.user.create({
       data: {
-        email: email.toLowerCase(),
+        email: email.trim().toLowerCase(),
         name: name || null,
         passwordHash,
+        timezone: settings?.timezone || 'Asia/Kolkata',
       },
     });
 
     // Set auth cookie
+    await db.activityEvent.create({ data: { userId: user.id, action: 'registered', feature: 'account' } });
     await setAuthCookie(user.id);
 
     // Return user data (excluding password)

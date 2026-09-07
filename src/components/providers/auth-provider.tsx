@@ -22,6 +22,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const pathname = usePathname();
   const router = useRouter();
   const isAuthPage = authPages.includes(pathname);
+  const isAdminPage = pathname === '/admin' || pathname.startsWith('/admin/');
 
   const checkAuth = useCallback(async () => {
     try {
@@ -99,6 +100,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
   }
 
   // Show main app layout with sidebar
+  if (isAdminPage) return <>{children}</>;
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="flex">
@@ -106,8 +108,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
         <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
         {/* Main content */}
-        <div className="flex-1 flex flex-col min-h-screen lg:min-h-0">
-          <Header onMenuClick={() => setSidebarOpen(true)} />
+        <div className="min-w-0 flex-1 flex flex-col min-h-screen lg:min-h-0">
+          <Header onMenuClick={() => setSidebarOpen(true)} isMenuOpen={sidebarOpen} />
           
           <main className="flex-1 p-4 lg:p-6 pb-20 lg:pb-6 overflow-auto">
             {children}
