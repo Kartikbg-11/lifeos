@@ -20,6 +20,7 @@ export async function GET() {
         id: true,
         email: true,
         name: true,
+        roleId: true,
         workoutGoal: true,
         pushupGoal: true,
         learningGoal: true,
@@ -46,6 +47,7 @@ export async function GET() {
         id: user.id,
         email: user.email,
         name: user.name,
+        roleId: user.roleId,
         settings: {
           workoutGoal: user.workoutGoal,
           pushupGoal: user.pushupGoal,

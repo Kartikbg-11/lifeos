@@ -15,6 +15,7 @@ node_modules
 
 # next.js
 /.next/
+/.next-admin-test/
 /.next-stale-*/
 /out/
 
@@ -37,6 +38,9 @@ yarn-error.log*
 
 # local Prisma database created by CLI commands
 /prisma/db/
+/db/backups/
+/db/admin-test*.db*
+/tool-results/admin-qa/
 
 # vercel
 .vercel

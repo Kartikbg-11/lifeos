@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import Link from 'next/link';
 import { useAuthStore } from '@/store/use-auth-store';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
@@ -16,9 +17,10 @@ import { format } from 'date-fns';
 
 interface HeaderProps {
   onMenuClick: () => void;
+  isMenuOpen: boolean;
 }
 
-export function Header({ onMenuClick }: HeaderProps) {
+export function Header({ onMenuClick, isMenuOpen }: HeaderProps) {
   const { user, logout } = useAuthStore();
 
   const getGreeting = () => {
@@ -42,18 +44,21 @@ export function Header({ onMenuClick }: HeaderProps) {
     <header className="sticky top-0 z-30 bg-white/95 backdrop-blur-md border-b border-gray-200">
       <div className="flex items-center justify-between px-4 lg:px-6 py-3">
         {/* Left side */}
-        <div className="flex items-center gap-4">
+        <div className="flex min-w-0 items-center gap-2 sm:gap-4">
           <Button
             variant="ghost"
             size="icon"
-            className="lg:hidden text-gray-600 hover:text-gray-900"
+            className="size-11 lg:hidden text-gray-600 hover:text-gray-900"
+            aria-label="Open navigation menu"
+            aria-expanded={isMenuOpen}
+            aria-controls="main-navigation"
             onClick={onMenuClick}
           >
-            <Menu className="w-5 h-5" />
+            <Menu className="size-6" />
           </Button>
 
-          <div>
-            <h1 className="text-lg md:text-xl font-semibold text-gray-900">
+          <div className="min-w-0">
+            <h1 className="text-lg md:text-xl font-semibold text-gray-900 break-words">
               {getGreeting()}, {user?.name || 'User'}! 👋
             </h1>
             <p className="text-xs md:text-sm text-gray-500 hidden sm:block">
@@ -69,9 +74,11 @@ export function Header({ onMenuClick }: HeaderProps) {
             variant="ghost"
             size="icon"
             className="relative text-gray-500 hover:text-gray-700"
+            asChild
           >
+            <Link href="/community" aria-label="Open your notification inbox">
             <Bell className="w-5 h-5" />
-            <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full" />
+            </Link>
           </Button>
 
           {/* User menu */}
