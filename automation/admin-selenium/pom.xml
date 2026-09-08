@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.lifeos</groupId><artifactId>admin-selenium</artifactId><version>1.0.0</version>
+  <name>LIFEOS Admin Selenium Automation</name>
+  <properties>
+    <maven.compiler.release>21</maven.compiler.release><project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <selenium.version>4.48.0</selenium.version><testng.version>7.12.0</testng.version>
+    <browser>chrome</browser><headless>true</headless><threads>2</threads><groups>smoke,regression,security</groups>
+    <grid.url></grid.url><wait.seconds>30</wait.seconds>
+  </properties>
+  <dependencies>
+    <dependency><groupId>org.seleniumhq.selenium</groupId><artifactId>selenium-java</artifactId><version>${selenium.version}</version><scope>test</scope></dependency>
+    <dependency><groupId>org.testng</groupId><artifactId>testng</artifactId><version>${testng.version}</version><scope>test</scope></dependency>
+    <dependency><groupId>com.fasterxml.jackson.core</groupId><artifactId>jackson-databind</artifactId><version>2.22.2</version><scope>test</scope></dependency>
+    <dependency><groupId>org.slf4j</groupId><artifactId>slf4j-simple</artifactId><version>2.0.17</version><scope>test</scope></dependency>
+  </dependencies>
+  <build><plugins>
+    <plugin><groupId>org.apache.maven.plugins</groupId><artifactId>maven-clean-plugin</artifactId><version>3.5.0</version></plugin>
+    <plugin><groupId>org.apache.maven.plugins</groupId><artifactId>maven-compiler-plugin</artifactId><version>3.16.0</version></plugin>
+    <plugin><groupId>org.apache.maven.plugins</groupId><artifactId>maven-surefire-plugin</artifactId><version>3.6.0</version>
+      <configuration>
+        <parallel>classes</parallel><threadCount>${threads}</threadCount><groups>${groups}</groups>
+        <failIfNoTests>true</failIfNoTests><trimStackTrace>false</trimStackTrace><forkCount>1</forkCount><reuseForks>true</reuseForks>
+        <systemPropertyVariables><browser>${browser}</browser><headless>${headless}</headless><grid.url>${grid.url}</grid.url><wait.seconds>${wait.seconds}</wait.seconds></systemPropertyVariables>
+        <properties><property><name>listener</name><value>com.lifeos.automation.core.SuiteListener</value></property><property><name>configfailurepolicy</name><value>continue</value></property></properties>
+      </configuration>
+    </plugin>
+  </plugins></build>
+</project>
