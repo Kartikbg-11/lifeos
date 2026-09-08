@@ -40,6 +40,7 @@ public final class DriverManager {
             }
             case "firefox" -> {
                 var firefox = new FirefoxOptions(); if (config.headless()) firefox.addArguments("-headless");
+                firefox.setCapability("webSocketUrl", true);
                 firefox.addPreference("browser.download.folderList", 2); firefox.addPreference("browser.download.dir", download.toString());
                 firefox.addPreference("browser.helperApps.neverAsk.saveToDisk", "text/csv,application/pdf,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
                 firefox.addPreference("pdfjs.disabled", true); options = firefox;

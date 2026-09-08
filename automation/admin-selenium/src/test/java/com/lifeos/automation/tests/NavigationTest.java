@@ -43,6 +43,9 @@ public final class NavigationTest extends BaseUiTest {
         if (driver() instanceof org.openqa.selenium.chromium.HasCdp cdp) {
             // Chromium clamps desktop windows to 500px; emulate the actual CSS viewport.
             cdp.executeCdpCommand("Emulation.setDeviceMetricsOverride", java.util.Map.of("width", width, "height", 1000, "deviceScaleFactor", 1, "mobile", false));
+        } else if (config.browser().equals("firefox")) {
+            // Firefox also clamps outer windows; BiDi sizes the real content viewport.
+            new org.openqa.selenium.bidi.browsingcontext.BrowsingContext(driver(), driver().getWindowHandle()).setViewport(width, 1000);
         } else {
             var outer = driver().manage().window().getSize();
             int inner = ((Number)page.script("return window.innerWidth")).intValue();
