@@ -416,8 +416,8 @@ export default function LearningPage() {
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={weeklyData}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-                  <XAxis dataKey="date" fontSize={12} tickLine={false} axisLine={false} />
-                  <YAxis fontSize={12} tickLine={false} axisLine={false} unit="h" />
+                  <XAxis dataKey="date" fontSize="0.875rem" tickLine={false} axisLine={false} />
+                  <YAxis fontSize="0.875rem" tickLine={false} axisLine={false} unit="h" />
                   <Tooltip
                     contentStyle={{
                       borderRadius: '12px',

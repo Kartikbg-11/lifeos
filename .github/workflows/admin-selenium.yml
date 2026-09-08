@@ -1,0 +1,61 @@
+name: Admin Selenium E2E
+
+on:
+  push:
+    branches: [main, lifeoswith-admin, feature/automation-1.0]
+    paths: ['src/**', 'prisma/**', 'scripts/**', 'automation/admin-selenium/**', 'package*.json', 'next.config.ts', '.github/workflows/admin-selenium.yml']
+  pull_request:
+    paths: ['src/**', 'prisma/**', 'scripts/**', 'automation/admin-selenium/**', 'package*.json', 'next.config.ts', '.github/workflows/admin-selenium.yml']
+  workflow_dispatch:
+    inputs:
+      browser:
+        description: Browser to test
+        type: choice
+        options: [chrome, firefox, edge]
+        default: chrome
+
+permissions:
+  contents: read
+
+concurrency:
+  group: admin-selenium-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  admin-e2e:
+    name: Admin E2E · ${{ matrix.browser }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: ${{ fromJSON(inputs.browser && format('["{0}"]', inputs.browser) || '["chrome","firefox"]') }}
+    env:
+      NEXT_TELEMETRY_DISABLED: '1'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+          cache: maven
+      - name: Install application dependencies
+        run: npm ci
+        env:
+          DATABASE_URL: file:./ci-bootstrap.db
+      - name: Build application and run isolated Selenium suite
+        run: npm run test:admin:selenium -- --browser=${{ matrix.browser }} --threads=2
+      - name: Upload test reports and failure screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: admin-selenium-${{ matrix.browser }}-${{ github.run_attempt }}
+          path: |
+            automation/admin-selenium/target/reports/
+            automation/admin-selenium/target/surefire-reports/
+          if-no-files-found: warn
+          retention-days: 7

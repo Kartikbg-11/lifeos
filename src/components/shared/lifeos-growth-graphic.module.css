@@ -1,18 +1,18 @@
 .hero { position: relative; display: grid; grid-template-columns: 1.15fr 1fr; align-items: center; overflow: hidden; border: 1px solid #254239; border-radius: 24px; background: radial-gradient(ellipse at 83% 40%, #173b32 0%, transparent 60%), #0d211d; color: #f0f6f0; isolation: isolate; }
 .copy { padding: 28px 0 28px 32px; max-width: 430px; position: relative; z-index: 1; }
-.eyebrow { display: flex; align-items: center; gap: 9px; font-size: 10px; font-weight: 600; letter-spacing: .18em; color: #aacbbb; }
+.eyebrow { display: flex; align-items: center; gap: 9px; font-size: .875rem; font-weight: 600; letter-spacing: .08em; color: #c4decf; }
 .eyebrow span, .visual figcaption span { width: 5px; height: 5px; border-radius: 50%; background: #bfe8a5; }
-.copy h2 { margin: 15px 0 12px; font-size: clamp(25px, 2.7vw, 36px); font-weight: 500; line-height: 1.18; letter-spacing: -.035em; }
+.copy h2 { margin: 15px 0 12px; font-size: clamp(2rem, 2.7vw, 2.5rem); font-weight: 600; line-height: 1.25; letter-spacing: -.025em; }
 .copy h2 span { color: #c5e5b3; }
-.description { font-size: 14px; line-height: 1.7; color: #b0c5bb; }
-.progressHeading { margin-top: 23px; display: flex; justify-content: space-between; gap: 12px; font-size: 11px; color: #c6d8cf; }
+.description { font-size: 1.125rem; line-height: 1.7; color: #c5d8ce; }
+.progressHeading { margin-top: 23px; display: flex; justify-content: space-between; gap: 12px; font-size: 1rem; color: #d6e5dd; }
 .progressHeading strong { font-weight: 500; color: #d6efc6; font-variant-numeric: tabular-nums; }
 .progressTrack { margin-top: 9px; height: 4px; background: #ffffff12; border-radius: 9px; overflow: hidden; }
 .progressTrack div { height: 100%; border-radius: inherit; background: linear-gradient(90deg, #62bea4, #d6edb7); transition: width .8s ease; }
-.caption { margin-top: 8px; font-size: 12px; color: #98b4a6; }
+.caption { margin-top: 8px; font-size: .875rem; line-height: 1.6; color: #bcd2c6; }
 .visual { margin: 0; position: relative; display: grid; place-items: center; min-width: 0; padding: 0 12px 25px; }
 .svg { width: 100%; max-width: 380px; height: 285px; overflow: visible; }
-.visual figcaption { display: flex; align-items: center; gap: 7px; padding: 6px 12px; border-radius: 30px; border: 1px solid #d7f4e116; background: #e3ffec05; color: #c7d9cb; font-size: 10px; letter-spacing: .035em; }
+.visual figcaption { display: flex; align-items: center; gap: 7px; padding: 8px 14px; border-radius: 30px; border: 1px solid #d7f4e116; background: #e3ffec05; color: #d6e6d9; font-size: .875rem; line-height: 1.5; }
 .stem, .branch { stroke-dasharray: 1; stroke-dashoffset: 0; animation: draw 1.2s ease-out both; }
 .stem { animation-delay: .45s; }
 .branch { animation-duration: .9s; animation-delay: var(--delay); }
@@ -37,17 +37,15 @@
 @media (hover: hover) and (pointer: fine) { .visual:hover .hoverTree { transform: scale(1.025); filter: drop-shadow(0 0 4px #b8f1ca40); } .visual:hover .particles { opacity: .65; } }
 @media (min-width: 768px) and (max-width: 1100px) { .copy { padding-left: 24px; } .svg { height: 270px; } }
 @media (max-width: 639px) {
-  .hero { grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); border-radius: 20px; }
-  .copy { padding: 20px 0 20px 18px; }
-  .eyebrow { font-size: 8px; letter-spacing: .08em; gap: 6px; }
-  .copy h2 { font-size: 25px; margin-top: 12px; }
-  .description { font-size: 12px; line-height: 1.6; }
+  .hero { grid-template-columns: minmax(0, 1fr); border-radius: 20px; }
+  .copy { padding: 24px 22px 12px; max-width: none; }
+  .eyebrow { letter-spacing: .06em; gap: 6px; }
+  .copy h2 { font-size: 2rem; margin-top: 12px; }
+  .description { font-size: 1rem; line-height: 1.7; }
   .description br { display: none; }
-  .progressHeading { margin-top: 16px; font-size: 10px; }
-  .caption { font-size: 11px; }
-  .visual { padding: 0 3px 10px; }
-  .svg { height: 205px; width: 122%; max-width: none; }
-  .visual figcaption { font-size: 8px; padding: 5px 7px; gap: 5px; }
+  .progressHeading { margin-top: 20px; flex-wrap: wrap; }
+  .visual { padding: 0 16px 24px; }
+  .svg { height: 230px; width: 100%; max-width: 320px; }
 }
 @media (prefers-reduced-motion: reduce) {
   .hero *, .hero *::before { animation: none !important; transition: none !important; }

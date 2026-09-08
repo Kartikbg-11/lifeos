@@ -11,6 +11,7 @@
     "lint": "eslint .",
     "admin:setup": "node --env-file=.env scripts/admin-setup.mjs",
     "admin:jobs": "node --env-file=.env scripts/admin-jobs.mjs",
+    "test:admin:selenium": "node automation/admin-selenium/scripts/run.mjs",
     "db:push": "prisma db push --accept-data-loss",
     "db:generate": "prisma generate",
     "db:migrate": "prisma migrate dev",

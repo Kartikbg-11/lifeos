@@ -111,7 +111,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
         <div className="min-w-0 flex-1 flex flex-col min-h-screen lg:min-h-0">
           <Header onMenuClick={() => setSidebarOpen(true)} isMenuOpen={sidebarOpen} />
           
-          <main className="flex-1 p-4 lg:p-6 pb-20 lg:pb-6 overflow-auto">
+          <main className="flex-1 p-4 lg:p-6 pb-48 min-[420px]:pb-28 lg:pb-6 overflow-auto">
             {children}
           </main>
         </div>
