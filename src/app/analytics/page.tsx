@@ -309,8 +309,8 @@ export default function AnalyticsPage() {
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={chartData}>
                     <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-                    <XAxis dataKey="date" fontSize={11} tickLine={false} axisLine={false} interval="preserveStartEnd" />
-                    <YAxis fontSize={12} tickLine={false} axisLine={false} />
+                    <XAxis dataKey="date" fontSize="0.875rem" tickLine={false} axisLine={false} interval="preserveStartEnd" />
+                    <YAxis fontSize="0.875rem" tickLine={false} axisLine={false} />
                     <Tooltip
                       contentStyle={{
                         borderRadius: '12px',
@@ -378,8 +378,8 @@ export default function AnalyticsPage() {
                 <ResponsiveContainer width="100%" height="100%">
                   <AreaChart data={chartData}>
                     <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-                    <XAxis dataKey="date" fontSize={11} tickLine={false} axisLine={false} interval="preserveStartEnd" />
-                    <YAxis fontSize={12} tickLine={false} axisLine={false} unit=" min" />
+                    <XAxis dataKey="date" fontSize="0.875rem" tickLine={false} axisLine={false} interval="preserveStartEnd" />
+                    <YAxis fontSize="0.875rem" tickLine={false} axisLine={false} unit=" min" />
                     <Tooltip contentStyle={{ borderRadius: '12px', border: 'none' }} />
                     <Area type="monotone" dataKey="fitness" stroke="#f97316" fill="#fed7aa" name="Minutes" />
                   </AreaChart>
@@ -400,8 +400,8 @@ export default function AnalyticsPage() {
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={chartData}>
                     <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-                    <XAxis dataKey="date" fontSize={11} tickLine={false} axisLine={false} interval="preserveStartEnd" />
-                    <YAxis fontSize={12} tickLine={false} axisLine={false} />
+                    <XAxis dataKey="date" fontSize="0.875rem" tickLine={false} axisLine={false} interval="preserveStartEnd" />
+                    <YAxis fontSize="0.875rem" tickLine={false} axisLine={false} />
                     <Tooltip contentStyle={{ borderRadius: '12px', border: 'none' }} />
                     <Bar dataKey="pushups" fill="#ef4444" radius={[4, 4, 0, 0]} name="Push-ups" />
                   </BarChart>
@@ -425,8 +425,8 @@ export default function AnalyticsPage() {
                 <ResponsiveContainer width="100%" height="100%">
                   <AreaChart data={chartData}>
                     <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-                    <XAxis dataKey="date" fontSize={11} tickLine={false} axisLine={false} interval="preserveStartEnd" />
-                    <YAxis fontSize={12} tickLine={false} axisLine={false} unit=" hrs" />
+                    <XAxis dataKey="date" fontSize="0.875rem" tickLine={false} axisLine={false} interval="preserveStartEnd" />
+                    <YAxis fontSize="0.875rem" tickLine={false} axisLine={false} unit=" hrs" />
                     <Tooltip contentStyle={{ borderRadius: '12px', border: 'none' }} />
                     <Area type="monotone" dataKey="learning" stroke="#3b82f6" fill="#bfdbfe" name="Hours" />
                   </AreaChart>
@@ -447,8 +447,8 @@ export default function AnalyticsPage() {
                 <ResponsiveContainer width="100%" height="100%">
                   <AreaChart data={chartData}>
                     <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-                    <XAxis dataKey="date" fontSize={11} tickLine={false} axisLine={false} interval="preserveStartEnd" />
-                    <YAxis fontSize={12} tickLine={false} axisLine={false} unit=" hrs" />
+                    <XAxis dataKey="date" fontSize="0.875rem" tickLine={false} axisLine={false} interval="preserveStartEnd" />
+                    <YAxis fontSize="0.875rem" tickLine={false} axisLine={false} unit=" hrs" />
                     <Tooltip contentStyle={{ borderRadius: '12px', border: 'none' }} />
                     <Area type="monotone" dataKey="interview" stroke="#8b5cf6" fill="#ddd6fe" name="Hours" />
                   </AreaChart>
@@ -472,8 +472,8 @@ export default function AnalyticsPage() {
                 <ResponsiveContainer width="100%" height="100%">
                   <LineChart data={chartData}>
                     <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-                    <XAxis dataKey="date" fontSize={11} tickLine={false} axisLine={false} interval="preserveStartEnd" />
-                    <YAxis fontSize={12} tickLine={false} axisLine={false} unit=" hrs" domain={[0, 12]} />
+                    <XAxis dataKey="date" fontSize="0.875rem" tickLine={false} axisLine={false} interval="preserveStartEnd" />
+                    <YAxis fontSize="0.875rem" tickLine={false} axisLine={false} unit=" hrs" domain={[0, 12]} />
                     <Tooltip contentStyle={{ borderRadius: '12px', border: 'none' }} />
                     <Line type="monotone" dataKey="sleep" stroke="#6366f1" strokeWidth={2} dot={{ fill: '#6366f1' }} name="Hours" />
                   </LineChart>
@@ -495,8 +495,8 @@ export default function AnalyticsPage() {
                   <ResponsiveContainer width="100%" height="100%">
                     <BarChart data={chartData}>
                       <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-                      <XAxis dataKey="date" fontSize={10} tickLine={false} axisLine={false} interval="preserveStartEnd" />
-                      <YAxis fontSize={12} tickLine={false} axisLine={false} unit=" g" />
+                      <XAxis dataKey="date" fontSize="0.875rem" tickLine={false} axisLine={false} interval="preserveStartEnd" />
+                      <YAxis fontSize="0.875rem" tickLine={false} axisLine={false} unit=" g" />
                       <Tooltip contentStyle={{ borderRadius: '12px', border: 'none' }} />
                       <Bar dataKey="protein" fill="#ef4444" radius={[4, 4, 0, 0]} name="Protein (g)" />
                     </BarChart>
@@ -517,8 +517,8 @@ export default function AnalyticsPage() {
                   <ResponsiveContainer width="100%" height="100%">
                     <BarChart data={chartData}>
                       <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-                      <XAxis dataKey="date" fontSize={10} tickLine={false} axisLine={false} interval="preserveStartEnd" />
-                      <YAxis fontSize={12} tickLine={false} axisLine={false} unit=" L" />
+                      <XAxis dataKey="date" fontSize="0.875rem" tickLine={false} axisLine={false} interval="preserveStartEnd" />
+                      <YAxis fontSize="0.875rem" tickLine={false} axisLine={false} unit=" L" />
                       <Tooltip contentStyle={{ borderRadius: '12px', border: 'none' }} />
                       <Bar dataKey="water" fill="#06b6d4" radius={[4, 4, 0, 0]} name="Liters" />
                     </BarChart>
@@ -543,8 +543,8 @@ export default function AnalyticsPage() {
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={chartData}>
                     <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-                    <XAxis dataKey="date" fontSize={11} tickLine={false} axisLine={false} interval="preserveStartEnd" />
-                    <YAxis fontSize={12} tickLine={false} axisLine={false} />
+                    <XAxis dataKey="date" fontSize="0.875rem" tickLine={false} axisLine={false} interval="preserveStartEnd" />
+                    <YAxis fontSize="0.875rem" tickLine={false} axisLine={false} />
                     <Tooltip 
                       formatter={(value: number) => [`₹${value.toFixed(2)}`, 'Expense']}
                       contentStyle={{ borderRadius: '12px', border: 'none' }} 

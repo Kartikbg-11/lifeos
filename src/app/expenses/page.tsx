@@ -436,8 +436,8 @@ export default function ExpensesPage() {
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={dailyData}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-                  <XAxis dataKey="date" fontSize={11} tickLine={false} axisLine={false} />
-                  <YAxis fontSize={12} tickLine={false} axisLine={false} />
+                  <XAxis dataKey="date" fontSize="0.875rem" tickLine={false} axisLine={false} />
+                  <YAxis fontSize="0.875rem" tickLine={false} axisLine={false} />
                   <Tooltip
                     formatter={(value: number) => `${currency}${value.toFixed(2)}`}
                     contentStyle={{

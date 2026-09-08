@@ -39,7 +39,7 @@ try {
       await menu.click();
       assert.equal(await menu.getAttribute('aria-expanded'), 'true');
       await page.waitForTimeout(350);
-      assert.equal(await page.getByRole('navigation', { name: 'Main navigation' }).getByRole('link', { name: 'Dashboard', exact: true }).evaluate(el => getComputedStyle(el).fontSize), '16px');
+      assert.equal(await page.getByRole('navigation', { name: 'Main navigation' }).getByRole('link', { name: 'Dashboard', exact: true }).evaluate(el => getComputedStyle(el).fontSize), '18px');
       await page.screenshot({ path: join(output, `menu-${width}.png`) });
       await page.getByRole('button', { name: 'Close navigation menu' }).click();
       assert.equal(await menu.getAttribute('aria-expanded'), 'false');

@@ -33,7 +33,7 @@ export function MobileNav() {
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-50 lg:hidden bg-white/95 backdrop-blur-md border-t border-gray-200 safe-area-pb">
-      <div className="flex items-center justify-around px-2 py-2">
+      <div className="grid grid-cols-3 gap-1 px-2 py-2 min-[420px]:grid-cols-6">
         {mobileNavItems.map((item) => {
           const isActive =
             item.href === '/'
@@ -45,10 +45,10 @@ export function MobileNav() {
               key={item.href}
               href={item.href}
               className={cn(
-                'flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-xl min-w-[60px] transition-all duration-200',
+                'flex min-w-0 flex-col items-center gap-1 px-1 py-1.5 rounded-xl transition-all duration-200',
                 isActive
-                  ? 'text-emerald-600'
-                  : 'text-gray-400 hover:text-gray-600'
+                  ? 'text-emerald-700'
+                  : 'text-gray-600 hover:text-gray-900'
               )}
             >
               <div
@@ -59,7 +59,7 @@ export function MobileNav() {
               >
                 {item.icon}
               </div>
-              <span className="text-[10px] font-medium">{item.label}</span>
+              <span className="text-xs font-semibold">{item.label}</span>
             </Link>
           );
         })}

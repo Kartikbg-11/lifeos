@@ -401,8 +401,8 @@ export default function FitnessPage() {
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={chartData}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-                <XAxis dataKey="date" fontSize={12} tickLine={false} axisLine={false} />
-                <YAxis fontSize={12} tickLine={false} axisLine={false} />
+                <XAxis dataKey="date" fontSize="0.875rem" tickLine={false} axisLine={false} />
+                <YAxis fontSize="0.875rem" tickLine={false} axisLine={false} />
                 <Tooltip
                   contentStyle={{
                     borderRadius: '12px',
